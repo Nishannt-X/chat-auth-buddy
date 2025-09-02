@@ -1,175 +1,63 @@
-import React, { useCallback, useState } from 'react';
-import { Upload, FileText, CheckCircle, AlertCircle } from 'lucide-react';
+import React from 'react';
+import { Button } from './ui/button';
+import { Database, Upload } from 'lucide-react';
 
-interface FileUploadProps {
-  onFileSelect: (file: File) => void;
+interface SampleDataUploadProps {
+  onDataSelect: () => void;
   isLoading: boolean;
   error?: string;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, isLoading, error }) => {
-  const [isDragOver, setIsDragOver] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-
-  const validateFile = (file: File): string | null => {
-    // Check file type
-    if (!file.name.toLowerCase().endsWith('.csv')) {
-      return 'Please upload a CSV file (.csv)';
-    }
-    
-    // Check file size (10MB limit)
-    if (file.size > 10 * 1024 * 1024) {
-      return 'File size must be less than 10MB';
-    }
-    
-    return null;
-  };
-
-  const handleFileSelect = useCallback((file: File) => {
-    const error = validateFile(file);
-    if (error) {
-      return;
-    }
-    
-    // Simulate upload progress
-    setUploadProgress(0);
-    const interval = setInterval(() => {
-      setUploadProgress(prev => {
-        if (prev >= 90) {
-          clearInterval(interval);
-          return 90;
-        }
-        return prev + 10;
-      });
-    }, 100);
-    
-    onFileSelect(file);
-    
-    // Complete progress when done
-    setTimeout(() => {
-      setUploadProgress(100);
-      setTimeout(() => setUploadProgress(0), 1000);
-    }, 1500);
-  }, [onFileSelect]);
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      handleFileSelect(files[0]);
-    }
-  }, [handleFileSelect]);
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-  }, []);
-
-  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      handleFileSelect(files[0]);
-    }
-  }, [handleFileSelect]);
-
+const SampleDataUpload: React.FC<SampleDataUploadProps> = ({
+  onDataSelect,
+  isLoading,
+  error
+}) => {
   return (
-    <div className="w-full max-w-md mx-auto fade-in">
-      <div
-        className={`upload-zone ${isDragOver ? 'drag-over' : ''}`}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-      >
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFileInput}
-          className="hidden"
-          id="file-upload"
-          disabled={isLoading}
-        />
+    <div className="w-full max-w-md mx-auto p-6 border-2 border-dashed border-[hsl(var(--border))] rounded-lg bg-[hsl(var(--card))] transition-colors">
+      <div className="text-center">
+        <Database className="mx-auto h-12 w-12 text-[hsl(var(--muted-foreground))] mb-4" />
         
-        <div className="flex flex-col items-center space-y-4">
-          {/* Upload Icon */}
-          <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 ${
-            isDragOver 
-              ? 'bg-[hsl(var(--primary))] scale-110' 
-              : 'bg-[hsl(var(--accent))]'
-          }`}>
-            {isLoading ? (
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[hsl(var(--primary))]"></div>
-            ) : (
-              <Upload className={`w-8 h-8 transition-colors duration-300 ${
-                isDragOver 
-                  ? 'text-[hsl(var(--primary-foreground))]' 
-                  : 'text-[hsl(var(--primary))]'
-              }`} />
-            )}
-          </div>
-          
-          {/* Upload Text */}
-          <div className="text-center">
-            <p className="text-lg font-semibold text-[hsl(var(--foreground))] mb-2">
-              {isLoading ? 'Processing your file...' : 'Upload Transaction History'}
-            </p>
-            <p className="text-sm text-[hsl(var(--muted-foreground))] mb-4">
-              Drag and drop your CSV file here, or{' '}
-              <label 
-                htmlFor="file-upload" 
-                className="text-[hsl(var(--primary))] hover:underline cursor-pointer font-medium"
-              >
-                browse to upload
-              </label>
-            </p>
-          </div>
-          
-          {/* File Requirements */}
-          <div className="flex items-center space-x-2 text-xs text-[hsl(var(--muted-foreground))]">
-            <FileText className="w-4 h-4" />
-            <span>Supported: CSV files with transaction data (max 10MB)</span>
-          </div>
-          
-          {/* Progress Bar */}
-          {uploadProgress > 0 && uploadProgress < 100 && (
-            <div className="w-full">
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill" 
-                  style={{ width: `${uploadProgress}%` }}
-                ></div>
-              </div>
-              <p className="text-xs text-[hsl(var(--muted-foreground))] mt-2 text-center">
-                Uploading... {uploadProgress}%
-              </p>
-            </div>
+        <h3 className="text-lg font-semibold text-[hsl(var(--foreground))] mb-2">
+          Sample Transaction Data
+        </h3>
+        
+        <p className="text-sm text-[hsl(var(--muted-foreground))] mb-4">
+          Use predefined transaction data for authentication testing
+        </p>
+        
+        <Button 
+          onClick={onDataSelect}
+          disabled={isLoading}
+          className="w-full mb-4"
+        >
+          {isLoading ? (
+            <>
+              <Upload className="mr-2 h-4 w-4 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            <>
+              <Database className="mr-2 h-4 w-4" />
+              Use Sample Data
+            </>
           )}
-          
-          {/* Success State */}
-          {uploadProgress === 100 && (
-            <div className="flex items-center space-x-2 text-[hsl(var(--success))]">
-              <CheckCircle className="w-4 h-4" />
-              <span className="text-sm font-medium">File uploaded successfully!</span>
-            </div>
-          )}
-          
-          {/* Error State */}
-          {error && (
-            <div className="flex items-center space-x-2 text-[hsl(var(--error))] bg-[hsl(var(--error-light))] p-3 rounded-lg">
-              <AlertCircle className="w-4 h-4" />
-              <span className="text-sm">{error}</span>
-            </div>
-          )}
+        </Button>
+        
+        <div className="text-xs text-[hsl(var(--muted-foreground))] space-y-1">
+          <p>• 44 sample transactions</p>
+          <p>• Various categories (Food, Shopping, Bills, etc.)</p>
+          <p>• Date range: July-August 2025</p>
         </div>
+        
+        {error && (
+          <div className="mt-4 p-3 bg-[hsl(var(--destructive-light))] border border-[hsl(var(--destructive))] rounded text-[hsl(var(--destructive))] text-sm">
+            {error}
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default FileUpload;
+export default SampleDataUpload;

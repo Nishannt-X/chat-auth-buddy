@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
-import FileUpload from './FileUpload';
+import SampleDataUpload from './FileUpload';
 import ProgressBar from './ProgressBar';
 import AuthResult from './AuthResult';
 import DebugPanel from './DebugPanel';
 import { Shield, Lock } from 'lucide-react';
 
 const ChatInterface: React.FC = () => {
-  const { state, uploadFile, submitAnswer, resetAuth } = useAuth();
+  const { state, uploadSampleData, submitAnswer, resetAuth } = useAuth();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages arrive
@@ -75,15 +75,13 @@ const ChatInterface: React.FC = () => {
           <MessageBubble key={message.id} message={message} />
         ))}
         
-        {/* File Upload Section - Only show during upload step */}
+        {/* Sample Data Upload */}
         {state.step === 'upload' && (
-          <div className="mt-8">
-            <FileUpload
-              onFileSelect={uploadFile}
-              isLoading={state.isLoading}
-              error={state.error}
-            />
-          </div>
+          <SampleDataUpload
+            onDataSelect={uploadSampleData}
+            isLoading={state.isLoading}
+            error={state.error}
+          />
         )}
         
         {/* Result Section - Only show during result step */}
