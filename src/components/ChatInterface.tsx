@@ -5,6 +5,7 @@ import ChatInput from './ChatInput';
 import FileUpload from './FileUpload';
 import ProgressBar from './ProgressBar';
 import AuthResult from './AuthResult';
+import DebugPanel from './DebugPanel';
 import { Shield, Lock } from 'lucide-react';
 
 const ChatInterface: React.FC = () => {
@@ -117,6 +118,9 @@ const ChatInterface: React.FC = () => {
           <p>⚠️ {state.error}</p>
         </div>
       )}
+
+      {/* Debug Panel - Remove this in production */}
+      <DebugPanel />
     </div>
   );
 };
