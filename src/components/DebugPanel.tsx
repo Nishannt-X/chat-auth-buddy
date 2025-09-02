@@ -11,8 +11,8 @@ const DebugPanel: React.FC = () => {
     setTestResult('Testing backend connection...');
     
     try {
-      // Test if backend is reachable
-      const response = await fetch('http://localhost:5000/api/health', {
+      // Test with actual endpoint that exists - try to get questions without session_id
+      const response = await fetch('http://localhost:5000/api/questions', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -20,7 +20,8 @@ const DebugPanel: React.FC = () => {
       });
       
       if (response.ok) {
-        setTestResult('✅ Backend is reachable');
+        const data = await response.json();
+        setTestResult('✅ Backend is reachable and responding');
       } else {
         setTestResult(`❌ Backend responded with status: ${response.status}`);
       }
@@ -41,13 +42,13 @@ const DebugPanel: React.FC = () => {
     setTestResult('Testing CSV upload...');
     
     try {
-      // Create a simple test CSV
-      const csvContent = 'Date,Description,Amount\n01/01/2024,Test Transaction,100.00';
+      // Create test CSV with correct format matching your backend expectations
+      const csvContent = 'Date,Time,Transaction Details,Amount,Tags\n15/08/2025,14:30:00,Test Transaction,-100.00,#Test';
       const blob = new Blob([csvContent], { type: 'text/csv' });
       const file = new File([blob], 'test.csv', { type: 'text/csv' });
       
       const formData = new FormData();
-      formData.append('user_id', 'test_user');
+      formData.append('user_id', 'debug_test_user');
       formData.append('csv_file', file);
       
       const response = await fetch('http://localhost:5000/api/upload-csv', {
@@ -58,9 +59,9 @@ const DebugPanel: React.FC = () => {
       const data = await response.json();
       
       if (response.ok) {
-        setTestResult(`✅ CSV upload successful: ${JSON.stringify(data)}`);
+        setTestResult(`✅ CSV upload successful. Data ID: ${data.data_id}`);
       } else {
-        setTestResult(`❌ CSV upload failed: ${JSON.stringify(data)}`);
+        setTestResult(`❌ CSV upload failed: ${data.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('CSV upload test failed:', error);
