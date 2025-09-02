@@ -17,6 +17,8 @@ const initialState: AuthState = {
     }
   ],
   isLoading: false,
+  questionsAsked: 0,
+  questionsCorrect: 0,
 };
 
 export const useAuth = () => {
@@ -252,7 +254,17 @@ export const useAuth = () => {
       removeTypingIndicator();
 
       if (response.success) {
-        const { validation, authentication_status } = response;
+        const { validation } = response;
+        
+        // Update question count and correct answers
+        const newQuestionsAsked = state.questionsAsked + 1;
+        const newQuestionsCorrect = state.questionsCorrect + (validation.is_correct ? 1 : 0);
+        
+        setState(prev => ({
+          ...prev,
+          questionsAsked: newQuestionsAsked,
+          questionsCorrect: newQuestionsCorrect,
+        }));
         
         // Add validation feedback
         const feedbackContent = validation.is_correct 
@@ -268,19 +280,22 @@ export const useAuth = () => {
           },
         });
 
-        // Check if authentication is complete
-        if (authentication_status.status !== 'in_progress') {
+        // Check if we've completed 3 questions
+        if (newQuestionsAsked >= 3) {
+          const authPassed = newQuestionsCorrect >= 2;
+          const scorePercentage = Math.round((newQuestionsCorrect / 3) * 100);
+          
           setState(prev => ({
             ...prev,
             step: 'result',
-            finalScore: authentication_status.score,
-            authStatus: authentication_status.status,
+            finalScore: scorePercentage,
+            authStatus: authPassed ? 'success' : 'failed',
           }));
 
           // Add final result message
-          const finalMessage = authentication_status.status === 'success'
-            ? `🎉 Authentication successful! You answered correctly with a score of ${authentication_status.score}%. Welcome back!`
-            : `❌ Authentication failed. You scored ${authentication_status.score}%. Please try again with a new CSV file.`;
+          const finalMessage = authPassed
+            ? `🎉 Authentication successful! You answered ${newQuestionsCorrect}/3 questions correctly (${scorePercentage}%). Welcome back!`
+            : `❌ Authentication failed. You answered ${newQuestionsCorrect}/3 questions correctly (${scorePercentage}%). You need at least 2/3 correct to pass.`;
 
           setTimeout(() => {
             addMessage({
@@ -314,6 +329,8 @@ export const useAuth = () => {
     setState({
       ...initialState,
       userId: generateUserId(),
+      questionsAsked: 0,
+      questionsCorrect: 0,
     });
   }, []);
 

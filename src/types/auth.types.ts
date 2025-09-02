@@ -71,4 +71,6 @@ export interface AuthState {
   error?: string;
   finalScore?: number;
   authStatus?: 'in_progress' | 'success' | 'failed';
+  questionsAsked: number;
+  questionsCorrect: number;
 }
