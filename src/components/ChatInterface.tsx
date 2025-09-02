@@ -33,7 +33,7 @@ const ChatInterface: React.FC = () => {
   return (
     <div className="chat-container flex flex-col h-screen max-w-4xl mx-auto">
       {/* Header */}
-      <div className="bg-[hsl(var(--card))] border-b border-[hsl(var(--border))] p-4 rounded-t-xl shadow-[var(--shadow-card)]">
+      <div className="bg-[hsl(var(--card))] border-b border-[hsl(var(--border))] p-4 rounded-t-xl shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-[hsl(var(--primary))] to-[hsl(var(--primary-dark))] rounded-full flex items-center justify-center">

@@ -68,7 +68,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         type="submit"
         size="sm"
         disabled={!message.trim() || isLoading || disabled}
-        className="rounded-xl bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-dark))] text-[hsl(var(--primary-foreground))] shadow-[var(--shadow-message)] transition-all duration-[var(--transition-fast)] disabled:opacity-50 disabled:cursor-not-allowed"
+        className="rounded-xl bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-dark))] text-[hsl(var(--primary-foreground))] shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isLoading ? (
           <Loader2 className="w-4 h-4 animate-spin" />

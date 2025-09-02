@@ -92,7 +92,7 @@ const AuthResult: React.FC<AuthResultProps> = ({
         {!isSuccess && (
           <Button
             onClick={onReset}
-            className="w-full bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-dark))] text-[hsl(var(--primary-foreground))] rounded-xl py-3 transition-all duration-[var(--transition-normal)]"
+            className="w-full bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-dark))] text-[hsl(var(--primary-foreground))] rounded-xl py-3 transition-all duration-300"
           >
             <RotateCcw className="w-4 h-4 mr-2" />
             Try Again
@@ -102,7 +102,7 @@ const AuthResult: React.FC<AuthResultProps> = ({
         {isSuccess && (
           <Button
             onClick={() => window.location.href = '/dashboard'}
-            className="w-full bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-dark))] text-[hsl(var(--primary-foreground))] rounded-xl py-3 transition-all duration-[var(--transition-normal)]"
+            className="w-full bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-dark))] text-[hsl(var(--primary-foreground))] rounded-xl py-3 transition-all duration-300"
           >
             Continue to Banking
           </Button>
@@ -111,7 +111,7 @@ const AuthResult: React.FC<AuthResultProps> = ({
         <Button
           onClick={onReset}
           variant="outline"
-          className="w-full border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] rounded-xl py-3 transition-all duration-[var(--transition-normal)]"
+          className="w-full border-[hsl(var(--border))] text-[hsl(var(--foreground))] hover:bg-[hsl(var(--accent))] rounded-xl py-3 transition-all duration-300"
         >
           Start New Verification
         </Button>
