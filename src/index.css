@@ -2,41 +2,80 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Banking Authentication Chat Interface Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Banking Color Palette */
+    --background: 210 17% 98%;
+    --foreground: 215 25% 27%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 27%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 27%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Banking Blue Primary */
+    --primary: 214 88% 40%;
+    --primary-foreground: 0 0% 98%;
+    --primary-light: 214 88% 95%;
+    --primary-dark: 214 88% 25%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Chat Interface Colors */
+    --chat-background: 210 17% 98%;
+    --bot-message: 214 88% 97%;
+    --user-message: 214 88% 40%;
+    --user-message-foreground: 0 0% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Success & Error States */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+    --success-light: 142 71% 95%;
+    
+    --error: 0 84% 60%;
+    --error-foreground: 0 0% 98%;
+    --error-light: 0 84% 95%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 98%;
+    --warning-light: 38 92% 95%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Neutral Colors */
+    --secondary: 210 17% 95%;
+    --secondary-foreground: 215 25% 27%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --muted: 210 17% 92%;
+    --muted-foreground: 215 13% 50%;
 
-    --radius: 0.5rem;
+    --accent: 214 88% 95%;
+    --accent-foreground: 214 88% 25%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 210 17% 89%;
+    --input: 210 17% 92%;
+    --ring: 214 88% 40%;
+
+    /* Banking Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-dark)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(142 71% 35%));
+    --gradient-chat: linear-gradient(180deg, hsl(var(--chat-background)), hsl(210 17% 95%));
+    --gradient-hero: linear-gradient(135deg, hsl(214 88% 40%), hsl(220 100% 50%));
+
+    /* Shadows */
+    --shadow-chat: 0 2px 10px hsl(214 88% 40% / 0.1);
+    --shadow-message: 0 1px 3px hsl(215 25% 27% / 0.1);
+    --shadow-card: 0 4px 20px hsl(214 88% 40% / 0.08);
+    --shadow-upload: 0 8px 30px hsl(214 88% 40% / 0.12);
+
+    /* Animation Timings */
+    --transition-fast: 0.15s ease-out;
+    --transition-normal: 0.3s ease-out;
+    --transition-slow: 0.5s ease-out;
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +139,126 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer components {
+  /* Chat Interface Components */
+  .chat-container {
+    @apply bg-gradient-to-b from-[hsl(var(--chat-background))] to-[hsl(210_17%_95%)] min-h-screen;
+  }
+
+  .message-bubble-bot {
+    @apply bg-[hsl(var(--bot-message))] text-[hsl(var(--foreground))] rounded-2xl rounded-bl-sm shadow-[var(--shadow-message)] max-w-xs sm:max-w-sm;
+  }
+
+  .message-bubble-user {
+    @apply bg-[hsl(var(--user-message))] text-[hsl(var(--user-message-foreground))] rounded-2xl rounded-br-sm shadow-[var(--shadow-message)] max-w-xs sm:max-w-sm;
+  }
+
+  .upload-zone {
+    @apply border-2 border-dashed border-[hsl(var(--border))] bg-[hsl(var(--card))] rounded-xl p-8 text-center transition-all duration-[var(--transition-normal)] hover:border-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-light))] hover:shadow-[var(--shadow-upload)];
+  }
+
+  .upload-zone.drag-over {
+    @apply border-[hsl(var(--primary))] bg-[hsl(var(--primary-light))] shadow-[var(--shadow-upload)];
+  }
+
+  .progress-bar {
+    @apply h-2 bg-[hsl(var(--muted))] rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--primary-dark))] transition-all duration-[var(--transition-normal)];
+  }
+
+  .typing-indicator {
+    @apply flex space-x-1 p-4;
+  }
+
+  .typing-dot {
+    @apply w-2 h-2 bg-[hsl(var(--muted-foreground))] rounded-full animate-pulse;
+  }
+
+  /* Authentication States */
+  .success-badge {
+    @apply bg-[hsl(var(--success-light))] text-[hsl(var(--success))] px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .error-badge {
+    @apply bg-[hsl(var(--error-light))] text-[hsl(var(--error))] px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .warning-badge {
+    @apply bg-[hsl(var(--warning-light))] text-[hsl(var(--warning))] px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  /* Animations */
+  .fade-in {
+    @apply animate-[fadeIn_var(--transition-normal)_ease-out];
+  }
+
+  .slide-up {
+    @apply animate-[slideUp_var(--transition-normal)_ease-out];
+  }
+
+  .scale-in {
+    @apply animate-[scaleIn_var(--transition-fast)_ease-out];
+  }
+}
+
+@layer utilities {
+  /* Custom Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes typingDots {
+    0%, 60%, 100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-8px);
+    }
+  }
+
+  .typing-dot:nth-child(1) {
+    animation: typingDots 1.4s infinite;
+  }
+  .typing-dot:nth-child(2) {
+    animation: typingDots 1.4s infinite 0.2s;
+  }
+  .typing-dot:nth-child(3) {
+    animation: typingDots 1.4s infinite 0.4s;
   }
 }
